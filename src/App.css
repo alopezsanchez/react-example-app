@@ -33,3 +33,19 @@
 .grid-item {
   height: 100%;
 }
+
+.card {
+  width: 60%;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.app-bar {
+  margin-bottom: 30px;
+}
+
+.card-list {
+  width: 80%;
+  margin: 0 auto;
+}
