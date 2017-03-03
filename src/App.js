@@ -1,16 +1,12 @@
 import React, {Component} from 'react';
-import { createStore } from 'redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import ProductsList from './Components/ProductsList/ProductsList';
 import ProductDetail from './Components/ProductDetail/ProductDetail';
 import Cart from './Components/Cart/Cart';
-
-import * as types from './Actions/types';
-
-import reducer from './Reducers/index';
-
+import * as actionCreators from './Actions/actionCreators';
 import AppBar from 'material-ui/AppBar';
-
 import './App.css';
 
 class App extends Component {
@@ -20,14 +16,10 @@ class App extends Component {
 
     this.select = this.select.bind(this);
     this.addToCart = this.addToCart.bind(this);
-    this.update = this.update.bind(this);
-
-    // Se instancia la store de redux
-    this.store = createStore(reducer,
-      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
     this.state = {
-      selected: this.props.products[0]
+      selected: this.props.products[0],
+      loading: false
     }
   }
 
@@ -40,36 +32,49 @@ class App extends Component {
   }
 
   addToCart() {
+    this.setState({
+      loading: true
+    });
     const selected = this.state.selected.id;
-    this.store.dispatch({
-      type: types.ADD_TO_BASKET,
-      id: selected
-    })
-  }
-
-  componentDidUnmount() {
-    this.unsubscribe();
-  }
-
-  componentDidMount () {
-    this.unsubscribe = this.store.subscribe(this.update);
-  }
-
-  update() {
-    this.forceUpdate();
+    this.props.addToCartAsync(selected).then(() => {
+      this.setState({
+        loading: false
+      });
+    });
   }
 
   render() {
-    const cart = this.store.getState();
+    const cart = this.state.loading ? <h3>Loading cart...</h3> : <Cart cart={this.props.cart} products={this.props.products}></Cart>
     return (
       <div className="App">
         <AppBar className="app-bar" title="React Shop" />
         <ProductsList select={this.select} products={this.props.products}></ProductsList>
         <ProductDetail addToCart={this.addToCart} product={this.state.selected}></ProductDetail>
-        <Cart cart={cart} products={this.props.products}></Cart>
+        {cart}
       </div>
     );
   }
 }
 
-export default App;
+// Funciones de React-Redux
+
+const mapStateToProps = (state) => {
+  return {
+    cart: state.cart,
+    products: state.products
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  // Ambas opciones son válidas
+  // La siguiente es la más cómoda y común
+  return bindActionCreators(actionCreators, dispatch);
+
+  /*return {
+    addToCart: (id) => {
+      dispatch(addToCart(id))
+    }
+  };*/
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

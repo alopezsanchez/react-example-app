@@ -14,13 +14,6 @@ import {
 
 
 class Cart extends Component {
-
-    constructor(props) {
-        super(props);
-
-        console.log(props.cart);
-    }
-
     render() {
         return (
             <Card className="card">
