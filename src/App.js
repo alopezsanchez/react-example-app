@@ -5,6 +5,8 @@ import ProductsList from './Components/ProductsList/ProductsList';
 import ProductDetail from './Components/ProductDetail/ProductDetail';
 import Cart from './Components/Cart/Cart';
 
+import * as types from './Actions/types';
+
 import reducer from './Reducers/index';
 
 import AppBar from 'material-ui/AppBar';
@@ -18,14 +20,14 @@ class App extends Component {
 
     this.select = this.select.bind(this);
     this.addToCart = this.addToCart.bind(this);
+    this.update = this.update.bind(this);
 
     // Se instancia la store de redux
     this.store = createStore(reducer,
       window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
     this.state = {
-      selected: this.props.products[0],
-      cart: {}
+      selected: this.props.products[0]
     }
   }
 
@@ -38,33 +40,33 @@ class App extends Component {
   }
 
   addToCart() {
-    this.setState((prevState) => {
-      const product = prevState.selected;
-      const productInCart = prevState.cart[product.id] || {
-        product: product,
-        quantity: 0
-      };
-      productInCart.quantity++;
-
-      return {
-        cart: Object.assign({}, prevState.cart, {[product.id]: productInCart})
-      }
-    });
-  }
-
-  increment() {
+    const selected = this.state.selected.id;
     this.store.dispatch({
-      type: 'INCREMENT'
+      type: types.ADD_TO_BASKET,
+      id: selected
     })
   }
 
+  componentDidUnmount() {
+    this.unsubscribe();
+  }
+
+  componentDidMount () {
+    this.unsubscribe = this.store.subscribe(this.update);
+  }
+
+  update() {
+    this.forceUpdate();
+  }
+
   render() {
+    const cart = this.store.getState();
     return (
-      <div className="App" onClick={this.increment.bind(this)}>
+      <div className="App">
         <AppBar className="app-bar" title="React Shop" />
         <ProductsList select={this.select} products={this.props.products}></ProductsList>
         <ProductDetail addToCart={this.addToCart} product={this.state.selected}></ProductDetail>
-        {<Cart cart={this.state.cart}></Cart>}
+        <Cart cart={cart} products={this.props.products}></Cart>
       </div>
     );
   }

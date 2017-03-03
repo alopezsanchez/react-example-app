@@ -14,6 +14,13 @@ import {
 
 
 class Cart extends Component {
+
+    constructor(props) {
+        super(props);
+
+        console.log(props.cart);
+    }
+
     render() {
         return (
             <Card className="card">
@@ -30,11 +37,13 @@ class Cart extends Component {
                     </TableHeader>
                     <TableBody>
                         {Object.keys(this.props.cart).map(id => {
-                            const item = this.props.cart[id];
-                            return (<TableRow key={item.product.id}>
-                                <TableRowColumn>{item.product.name}</TableRowColumn>
-                                <TableRowColumn>{item.product.prize}</TableRowColumn>
-                                <TableRowColumn>{item.quantity}</TableRowColumn>
+                            //const item = this.props.cart[id];
+                            //const item = this.props.products[id];
+                            const item = this.props.products.find(product => product.id === +id);
+                            return (<TableRow key={item.id}>
+                                <TableRowColumn>{item.name}</TableRowColumn>
+                                <TableRowColumn>{item.prize}</TableRowColumn>
+                                <TableRowColumn>{this.props.cart[id]}</TableRowColumn>
                             </TableRow>)
                         })}
                     </TableBody>
