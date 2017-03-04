@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Product from '../Product/Product';
 import {GridList} from 'material-ui/GridList';
 import {Card} from 'material-ui/Card';
+
 class ProductsList extends Component {
 
     constructor(props) {
@@ -26,7 +27,7 @@ class ProductsList extends Component {
     }
 
     render() {
-        const products = this.state.products.map(product => <Product toggleStar={this.toggleStar} selectThis={() => this.props.select(product)} 
+        const products = this.state.products.map(product => <Product toggleStar={this.toggleStar} 
                     key={product.id} product={product}></Product>);
 
         products.sort((a, b) => {

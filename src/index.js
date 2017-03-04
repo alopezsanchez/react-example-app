@@ -14,7 +14,7 @@ import products from './data/products';
 
 injectTapEventPlugin();
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__COMPOSE || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, {
   cart: {},
   products

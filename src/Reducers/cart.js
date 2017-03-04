@@ -7,6 +7,10 @@ const reducer = (state={}, action) => {
             return Object.assign({}, state, {
                 [action.id]: productInCart
             });
+        case types.UPDATE_BASKET:
+            return {...state, [action.id]: action.quantity};
+        case types.UPDATE_SHIPPING:
+            return {...state, shipping: action.shipping}
         default:
             return state;
     }

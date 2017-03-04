@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
+import CircularProgress from 'material-ui/CircularProgress';
+import IconButton from 'material-ui/IconButton';
+import CartIcon from 'material-ui/svg-icons/action/shopping-cart';
 
+
+import Home from './Components/Home/Home';
+import NotFound from './Components/ProductDetail/NotFound';
 import ProductsList from './Components/ProductsList/ProductsList';
 import ProductDetail from './Components/ProductDetail/ProductDetail';
 import Cart from './Components/Cart/Cart';
@@ -14,44 +21,45 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.select = this.select.bind(this);
     this.addToCart = this.addToCart.bind(this);
+    this.renderProductDetail = this.renderProductDetail.bind(this);
 
     this.state = {
-      selected: this.props.products[0],
       loading: false
-    }
+    };
   }
 
-  select(product) {
-    console.log(`${product.name}. ${product.prize}€ `);
-
-    this.setState({
-      selected: product
-    });
-  }
-
-  addToCart() {
+  addToCart(item) {
     this.setState({
       loading: true
     });
-    const selected = this.state.selected.id;
-    this.props.addToCartAsync(selected).then(() => {
+    this.props.addToCartAsync(item.id).then(() => {
       this.setState({
         loading: false
       });
     });
   }
 
+  renderProductDetail(id) {
+    const product = this.props.products.find(product => product.id === +id)
+    return product ? <ProductDetail addToCart={this.addToCart} product={product}/> : <NotFound />
+  }
+
   render() {
-    const cart = this.state.loading ? <h3>Loading cart...</h3> : <Cart cart={this.props.cart} products={this.props.products}></Cart>
-    return (
-      <div className="App">
-        <AppBar className="app-bar" title="React Shop" />
-        <ProductsList select={this.select} products={this.props.products}></ProductsList>
-        <ProductDetail addToCart={this.addToCart} product={this.state.selected}></ProductDetail>
-        {cart}
-      </div>
+    const cart = this.state.loading ? <CircularProgress size={60} thickness={5}/> : <Cart updateCart={this.props.updateCart} cart={this.props.cart} products={this.props.products}></Cart>
+    return ( 
+      <Router>
+        <div className="App">
+          <AppBar iconElementRight={<Link to="/cart"><IconButton><CartIcon color="white"/></IconButton></Link>} className="app-bar" title="React Shop" />
+          <Route exactly path="/" render={() => <ProductsList select={this.select} products={this.props.products}></ProductsList>}></Route>
+          <Route path="/cart" render={() => cart}></Route>
+          <Route path="/detail/:id" render={(props) => this.renderProductDetail(props.match.params.id)}></Route> 
+            {/*<AppBar className="app-bar" title="React Shop" />
+            <ProductsList select={this.select} products={this.props.products}></ProductsList>
+            <ProductDetail addToCart={this.addToCart} product={this.state.selected}></ProductDetail>
+            {cart}  */}
+        </div>
+      </Router> 
     );
   }
 }
@@ -61,7 +69,8 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
     cart: state.cart,
-    products: state.products
+    products: state.products,
+    shipping: state.shipping
   }
 };
 

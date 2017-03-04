@@ -6,6 +6,7 @@ import {
     CardText
 } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
+import { Link } from 'react-router-dom';
 
 class ProductDetail extends Component {
 
@@ -21,21 +22,23 @@ class ProductDetail extends Component {
 
     render() {
         return (
-            <Card className="card">
+            <Link to={`/detail/${this.props.product.id}`}>
+                <Card className="card">
 
-                <CardTitle
-                    title={this.props.product.name}
-                    subtitle={this.props.product.prize + '€'}/>
-                <CardText>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis pretium
-                    massa. Aliquam erat volutpat. Nulla facilisi. Donec vulputate interdum
-                    sollicitudin. Nunc lacinia auctor quam sed pellentesque. Aliquam dui mauris,
-                    mattis quis lacus id, pellentesque lobortis odio.
-                </CardText>
-                <CardActions>
-                    <RaisedButton onClick={this.addToCart} label="Add to cart" primary={true} />
-                </CardActions>
-            </Card>
+                    <CardTitle
+                        title={this.props.product.name}
+                        subtitle={this.props.product.prize + '€'}/>
+                    <CardText>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis pretium
+                        massa. Aliquam erat volutpat. Nulla facilisi. Donec vulputate interdum
+                        sollicitudin. Nunc lacinia auctor quam sed pellentesque. Aliquam dui mauris,
+                        mattis quis lacus id, pellentesque lobortis odio.
+                    </CardText>
+                    <CardActions>
+                        <RaisedButton onClick={this.addToCart} label="Add to cart" primary={true} />
+                    </CardActions>
+                </Card>
+            </Link>
         );
     }
 }

@@ -3,13 +3,13 @@ import {GridTile} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import Star from 'material-ui/svg-icons/toggle/star';
+import { Link } from 'react-router-dom';
 
 class Product extends Component {
     
     constructor(props) {
         super(props);
         
-        this.select = this.select.bind(this);
         this.toggleStar = this.toggleStar.bind(this);
 
         this.state = {
@@ -23,20 +23,17 @@ class Product extends Component {
         this.props.toggleStar(this.props.product);
     }
 
-    select(e) {
-        e.preventDefault();
-        this.props.selectThis();
-    }
-
     render() {
         return (
-            <GridTile className="grid-item" title={this.props.product.name} onClick={this.select} 
+            <GridTile className="grid-item" title={this.props.product.name}
                 subtitle={<span><b>{this.props.product.prize} € </b></span>}
                 actionIcon={<IconButton onClick={this.toggleStar}>
                                 {this.props.product.starred ? <Star color="white"></Star> : <StarBorder color="white"/>}
                             </IconButton>}>
-                <img src={`/f/${this.props.product.img}`} alt={this.props.product.name} />
-            </GridTile>
+                <Link to={`/detail/${this.props.product.id}`}>
+                    <img src={`${this.props.product.img}`} alt={this.props.product.name} />
+                </Link>
+            </GridTile> 
         );
     }
 }

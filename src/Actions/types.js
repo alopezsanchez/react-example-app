@@ -1,3 +1,5 @@
 export const ADD_TO_BASKET = 'ADD_TO_BASKET';
 
-export const EDIT_BASKET = 'ADD_TO_BASKET';
+export const UPDATE_CART = 'UPDATE_CART';
+
+export const UPDATE_SHIPPING = 'UPDATE_SHIPPING';
